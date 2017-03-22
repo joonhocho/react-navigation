@@ -23,7 +23,8 @@ export default (
   let prevOptionName;
   let prevConfig;
   let prevResult;
-  (
+
+  return (
     navigation: NavigationProp<*, NavigationAction>,
     optionName: string,
     config?: NavigationScreenOption<*>
@@ -82,3 +83,4 @@ export default (
 
     return prevResult;
   };
+};
