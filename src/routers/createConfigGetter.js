@@ -18,12 +18,26 @@ import type {
 export default (
   routeConfigs: NavigationRouteConfigMap,
   defaultOptions?: NavigationScreenOptions
-) =>
+) => {
+  let prevNavigation;
+  let prevOptionName;
+  let prevConfig;
+  let prevResult;
   (
     navigation: NavigationProp<*, NavigationAction>,
     optionName: string,
     config?: NavigationScreenOption<*>
   ) => {
+    if (navigation === prevNavigation &&
+        optionName === prevOptionName &&
+        config === prevConfig) {
+      return prevResult;
+    }
+
+    prevNavigation = navigation;
+    prevOptionName = optionName;
+    prevConfig = config;
+
     const route = navigation.state;
     invariant(
       route.routeName &&
@@ -50,7 +64,7 @@ export default (
 
     const routeConfig = routeConfigs[route.routeName];
 
-    return [
+    prevResult = [
       defaultOptions,
       Component.navigationOptions,
       routeConfig.navigationOptions,
@@ -65,4 +79,6 @@ export default (
       },
       outputConfig,
     );
+
+    return prevResult;
   };
